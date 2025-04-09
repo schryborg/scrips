@@ -8,6 +8,8 @@ CTID="$1"
 DATASET_PREFIX="$2"
 MOUNTPOINT="$3"
 CACHE_SIZE="${4:-50G}"
+UID=$5
+GID=$6
 
 ZFS_POOL="rpool/data"
 ZFS_DATASET="${ZFS_POOL}/${DATASET_PREFIX}-${CTID}"
@@ -35,7 +37,11 @@ fi
 # ===== FIND AVAILABLE mpX SLOT =====
 for i in {0..9}; do
   if ! grep -q "^mp$i:" "$LXC_CONF"; then
-    MP_ENTRY="mp$i: /${ZFS_DATASET},mp=${MOUNTPOINT}"
+    if [ -z "$UID" ] && [ -z "$GID" ]; then
+      MP_ENTRY="mp$i: /${ZFS_DATASET},mp=${MOUNTPOINT}"
+    else
+      MP_ENTRY="mp$i: /${ZFS_DATASET},mp=${MOUNTPOINT},uid=${UID},gid=${GID}"
+    fi
     echo "✅ Adding mount to container config: $MP_ENTRY"
     echo "$MP_ENTRY" >> "$LXC_CONF"
     echo "✅ Done! Restart container $CTID to apply changes."
