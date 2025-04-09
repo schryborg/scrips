@@ -1,5 +1,5 @@
 #!/bin/bash
-# Creawte ZFS Dataset, find and reate mount point with given LXC CTID and 
+# Create ZFS Dataset, find and reate mount point with given LXC CTID and 
 # CTID, Dataset-Prefix (Dataset Name = Dataset-Prefix + CTID) mount path and size can be passed as arguments
 
 
@@ -32,7 +32,12 @@ if zfs list "$ZFS_DATASET" &>/dev/null; then
   echo "⚠️ Dataset $ZFS_DATASET already exists."
 else
   echo "✅ Creating ZFS dataset $ZFS_DATASET with quota $CACHE_SIZE..."
-  zfs create -o quota="$CACHE_SIZE" -o mountpoint=none "$ZFS_DATASET"
+  if zfs create -o quota="$CACHE_SIZE" -o mountpoint=none "$ZFS_DATASET"; then
+    echo "✅ Dataset $ZFS_DATASET created successfully."
+  else
+    echo "❌ Failed to create ZFS dataset $ZFS_DATASET."
+    exit 1
+  fi
 fi
 
 # ===== FIND AVAILABLE mpX SLOT =====
