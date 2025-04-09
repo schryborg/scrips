@@ -1,5 +1,5 @@
 #!/bin/bash
-# Create ZFS Dataset, find and reate mount point with given LXC CTID and 
+# Create ZFS Dataset, find and create mount point with given LXC CTID and 
 # CTID, Dataset-Prefix (Dataset Name = Dataset-Prefix + CTID) mount path and size can be passed as arguments
 
 
