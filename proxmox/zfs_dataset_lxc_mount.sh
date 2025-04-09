@@ -7,8 +7,8 @@
 CTID="$1"
 DATASET_PREFIX="$2"
 MOUNTPOINT="$3"
-UID=$4
-GID=$5
+UserID=$4
+GroupID=$5
 CACHE_SIZE="${6:-50G}"
 
 
@@ -43,10 +43,10 @@ fi
 # ===== FIND AVAILABLE mpX SLOT =====
 for i in {0..9}; do
   if ! grep -q "^mp$i:" "$LXC_CONF"; then
-    if [ -z "$UID" ] && [ -z "$GID" ]; then
+    if [ -z "$UserID" ] && [ -z "$GroupID" ]; then
       MP_ENTRY="mp$i: /${ZFS_DATASET},mp=${MOUNTPOINT}"
     else
-      MP_ENTRY="mp$i: /${ZFS_DATASET},mp=${MOUNTPOINT},uid=${UID},gid=${GID}"
+      MP_ENTRY="mp$i: /${ZFS_DATASET},mp=${MOUNTPOINT},UserID=${UserID},GroupID=${GroupID}"
     fi
     echo "✅ Adding mount to container config: $MP_ENTRY"
     echo "$MP_ENTRY" >> "$LXC_CONF"
